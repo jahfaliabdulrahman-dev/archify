@@ -1,0 +1,79 @@
+{
+  "name": "archify delivery verification",
+  "description": "The canonical local order for regenerating archify artifacts and checking their freshness before a push.",
+  "stages": [
+    {
+      "id": "viewer",
+      "label": "Generate viewer bundle",
+      "command": "npm",
+      "args": ["--prefix", "archify", "run", "generate:viewer"]
+    },
+    {
+      "id": "examples",
+      "label": "Render bundled examples",
+      "command": "npm",
+      "args": ["--prefix", "archify", "run", "render:examples"]
+    },
+    {
+      "id": "packaged-examples",
+      "label": "Render packaged examples",
+      "command": "node",
+      "args": ["archify/scripts/render-examples.mjs", "archify/examples"]
+    },
+    {
+      "id": "gallery",
+      "label": "Build docs gallery",
+      "command": "npm",
+      "args": ["--prefix", "archify", "run", "build:gallery"]
+    },
+    {
+      "id": "readme",
+      "label": "Build README motion proof",
+      "command": "node",
+      "args": ["scripts/build-readme-showcase.mjs"],
+      "env": {
+        "PATH_PREPEND": "${ARCHIFY_FFMPEG_PATH}"
+      }
+    },
+    {
+      "id": "zip",
+      "label": "Build distribution zip",
+      "command": "bash",
+      "args": ["scripts/build-zip.sh"],
+      "platforms": ["darwin", "linux"]
+    },
+    {
+      "id": "generated",
+      "label": "Check generated artifacts",
+      "command": "npm",
+      "args": ["run", "test:generated"]
+    },
+    {
+      "id": "readme-test",
+      "label": "Check README motion proof freshness",
+      "command": "node",
+      "args": ["--test", "test/readme-showcase.test.mjs"]
+    },
+    {
+      "id": "browser",
+      "label": "Run browser regressions",
+      "command": "node",
+      "args": [
+        "--test",
+        "test/viewer-mobile-chrome-browser.test.mjs",
+        "test/viewer-print-clearance-browser.test.mjs",
+        "test/passport-explanation-browser.test.mjs",
+        "test/semantic-legend-gateway.test.mjs",
+        "test/viewer-camera-browser.test.mjs",
+        "test/viewer-chrome-layout.test.mjs"
+      ]
+    }
+  ],
+  "freshness": [
+    {
+      "id": "readme-motion-proof",
+      "label": "README motion proof receipt",
+      "receipt": "docs/assets/archify-live-proof.json"
+    }
+  ]
+}

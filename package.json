@@ -14,7 +14,8 @@
     "test:core": "node scripts/run-tests.mjs test/core-smoke.test.mjs",
     "test:generated": "npm --prefix archify run check:viewer && npm --prefix archify run check:brand-marks && npm --prefix archify run check:validators && npm --prefix archify run check:release-identity && node test/golden.mjs",
     "test:full": "npm run test:generated && node scripts/run-tests.mjs",
-    "test:affected": "node scripts/run-affected-tests.mjs"
+    "test:affected": "node scripts/run-affected-tests.mjs",
+    "verify:delivery": "node scripts/verify-delivery.mjs"
   },
   "devDependencies": {
     "ajv": "^8.17.1",
